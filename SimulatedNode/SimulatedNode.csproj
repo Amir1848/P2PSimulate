@@ -10,5 +10,9 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="YamlDotNet" Version="11.2.1" />
+  </ItemGroup>
+
 
 </Project>
