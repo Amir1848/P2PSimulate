@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SimulatedNode.Models;
+using SimulatedNode.Services;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
@@ -18,19 +19,14 @@ namespace SimulatedNode
     {
         public static void Main(string[] args)
         {
-            Thread thread = new Thread(Print);
-            Thread thread2 = new Thread(CreateHostBuilder(args).Build().Run);
+            SimulateAppService.Initialize();
+            //Thread thread = new Thread(Print);
+            //Thread thread2 = new Thread(CreateHostBuilder(args).Build().Run);
+            CreateHostBuilder(args, SimulateAppService.GetAppConfig().NodePort).Build().Run();
 
 
-
-            var deserializer = new DeserializerBuilder()
-               .WithNamingConvention(new CamelCaseNamingConvention())
-               .Build();
-
-            var appConfig = deserializer.Deserialize<SimulateConfig>(File.OpenText("myfile.yml"));
-
-            thread.Start();
-            thread2.Start();
+            //thread.Start();
+            //thread2.Start();
 
             //CreateHostBuilder(args).Build().Run();
         }
@@ -44,11 +40,12 @@ namespace SimulatedNode
             }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
+        public static IHostBuilder CreateHostBuilder(string[] args, string portNumber) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseUrls("http://localhost:" + portNumber);
                 });
     }
 }
