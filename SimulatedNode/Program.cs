@@ -20,23 +20,19 @@ namespace SimulatedNode
         public static void Main(string[] args)
         {
             SimulateAppService.Initialize();
-            //Thread thread = new Thread(Print);
-            //Thread thread2 = new Thread(CreateHostBuilder(args).Build().Run);
-            CreateHostBuilder(args, SimulateAppService.GetAppConfig().NodePort).Build().Run();
-
-
-            //thread.Start();
-            //thread2.Start();
-
-            //CreateHostBuilder(args).Build().Run();
+            Thread thread = new Thread(GetCommandsFromUser);
+            Thread thread2 = new Thread(CreateHostBuilder(args, SimulateAppService.GetAppConfig().NodePort).Build().Run);
+            
+            thread.Start();
+            thread2.Start();
         }
 
-        static void Print()
+        static void GetCommandsFromUser()
         {
             while (true)
             {
                 var a = Console.ReadLine();
-                Console.WriteLine(a);
+                
             }
         }
 
