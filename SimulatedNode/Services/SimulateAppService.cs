@@ -15,6 +15,7 @@ namespace SimulatedNode.Services
     {
         private static SimulateConfig appConfig;
         private static List<NodeInfo> nodesInfo;
+        private static string absoluteFileNewPath = "";
         internal static void Initialize()
         {
             var deserializer = new DeserializerBuilder()
@@ -23,6 +24,8 @@ namespace SimulatedNode.Services
 
             appConfig = deserializer.Deserialize<SimulateConfig>(File.OpenText("Config.yml"));
             nodesInfo = deserializer.Deserialize<NodesInfo>(File.OpenText("NodeFiles.yml")).NodeFiles.OrderBy(p => p.NodeName).ToList();
+            absoluteFileNewPath  = Path.Combine(Directory.GetCurrentDirectory(), appConfig.NewFilesDir);
+            Directory.CreateDirectory(absoluteFileNewPath);
         }
         
         internal static SimulateConfig GetAppConfig()
@@ -43,22 +46,15 @@ namespace SimulatedNode.Services
 
         public static CommandResult ProcessCommand(string command)
         {
-            return CommandResult.Failed;
             var commandParts = command.Split(" ");
             switch (commandParts[0].ToLower())
             {
                 case "request":
-                    var fileName = commandParts[0];
-
-                    // code block
+                    var fileName = commandParts[1];
+                    GetFile(fileName, GetNodePort(GetFileNodeNumber(fileName)));
                     break;
-                //case y:
-                    // code block
-                  //  break;
-                //default:
-                    // code block
-                  //  break;
             }
+            return CommandResult.Successful;
         }
 
         public static long GetFileNodeNumber(string fileName)
@@ -78,7 +74,12 @@ namespace SimulatedNode.Services
                 foreach (var node in appConfig.FriendNodes.OrderBy(p => p.NodeName))
                 {
                     var result = httpClient.GetAsync("http://localhost:"+ node.NodePort).Result;
-                    nodeInfo.NodePort = "1";//result.Content.ReadAsStringAsync();
+                    var port = result.Content.ReadAsStringAsync().Result;
+                    if (string.IsNullOrWhiteSpace(port))
+                    {
+                        nodeInfo.NodePort = port;
+                        break;
+                    }
                 }
             }
             return nodeInfo.NodePort;
@@ -86,8 +87,7 @@ namespace SimulatedNode.Services
 
         public static void GetFile(string fileName,string portNumber)
         {
-            WebClient client = new WebClient();
-            client.DownloadFile("http://localhost:" + portNumber, appConfig.NewFilesDir);
+            DownloadFileAsync("http://localhost:" + portNumber + "/P2P/GetFile?fileName="+ fileName, Path.Combine(Directory.GetCurrentDirectory(), absoluteFileNewPath));
         }
 
         public static void PrintHelp(string note = null)
@@ -95,6 +95,23 @@ namespace SimulatedNode.Services
 
         }
 
+        private static readonly HttpClient _httpClient = new HttpClient();
 
+        public static async void DownloadFileAsync(string uri, string outputPath)
+        {
+            Uri uriResult;
+
+            if (!Uri.TryCreate(uri, UriKind.Absolute, out uriResult))
+                throw new InvalidOperationException("URI is invalid.");
+
+            if (!File.Exists(outputPath))
+                throw new FileNotFoundException("File not found.", nameof(outputPath));
+
+            byte[] fileBytes = await _httpClient.GetByteArrayAsync(uri);
+            File.WriteAllBytes(outputPath, fileBytes);
+        }
     }
+
+
 }
+

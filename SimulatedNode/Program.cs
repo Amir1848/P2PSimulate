@@ -31,8 +31,8 @@ namespace SimulatedNode
         {
             while (true)
             {
-                var a = Console.ReadLine();
-                
+                var userCommand = Console.ReadLine();
+                SimulateAppService.ProcessCommand(userCommand);
             }
         }
 
