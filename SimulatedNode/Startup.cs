@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +10,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NLog;
+using SimulatedNode.Interfaces;
+using SimulatedNode.Services;
 
 namespace SimulatedNode
 {
@@ -18,6 +20,7 @@ namespace SimulatedNode
     {
         public Startup(IConfiguration configuration)
         {
+            LogManager.LoadConfiguration(Path.Combine(Directory.GetCurrentDirectory(), "nlog.config.xml"));
             Configuration = configuration;
         }
 
@@ -29,6 +32,7 @@ namespace SimulatedNode
             services.AddControllers();
 
             services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
+            services.AddSingleton<ILoggerManager, SimulateAppLoggerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

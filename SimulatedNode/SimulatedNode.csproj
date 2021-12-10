@@ -2,16 +2,27 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <PublishSingleFile>false</PublishSingleFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
+    <None Remove="nlog.config.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="nlog.config.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="NewFolder\" />
+    <Folder Include="Node1\newFiles\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
+    <PackageReference Include="NLog" Version="4.7.13" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.14.0" />
     <PackageReference Include="YamlDotNet" Version="11.2.1" />
   </ItemGroup>
 
