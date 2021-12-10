@@ -4,3 +4,9 @@
 2021-12-10 12:15:08.3055 INFO GetNodeAddress: 3
 2021-12-10 12:15:09.1047 INFO GetNodeAddress: 3
 2021-12-10 12:15:09.8102 INFO GetNodeAddress: 3
+2021-12-10 14:39:55.3134 INFO GetFile: file4
+2021-12-10 14:39:55.6245 ERROR Own File Not FoundD:\uni\P2PSimulate\SimulatedNode\Node1/ownedFiles/file4
+2021-12-10 14:44:27.6555 INFO GetFile: file4
+2021-12-10 14:44:27.6858 ERROR Own File Not FoundD:\uni\P2PSimulate\SimulatedNode\Node1\ownedFiles\file4
+2021-12-10 14:45:05.6900 INFO GetFile: file4.txt
+2021-12-10 14:45:13.7968 INFO GetFile: file4.txt

@@ -85,7 +85,7 @@ namespace SimulatedNode.Services
 
         public static void GetFile(string fileName,string portNumber)
         {
-            DownloadFileAsync("http://localhost:" + portNumber + "/P2P/GetFile?fileName="+ fileName, Path.Combine(Directory.GetCurrentDirectory(), absoluteFileNewPath));
+            DownloadFileAsync("http://localhost:" + portNumber + "/P2P/GetFile?fileName="+ fileName, Path.Combine(Directory.GetCurrentDirectory(), absoluteFileNewPath) + fileName);
         }
 
         public static void PrintHelp(string note = null)
@@ -101,9 +101,6 @@ namespace SimulatedNode.Services
 
             if (!Uri.TryCreate(uri, UriKind.Absolute, out uriResult))
                 throw new InvalidOperationException("URI is invalid.");
-
-            if (!File.Exists(outputPath))
-                throw new FileNotFoundException("File not found.", nameof(outputPath));
 
             byte[] fileBytes = await _httpClient.GetByteArrayAsync(uri);
             File.WriteAllBytes(outputPath, fileBytes);
