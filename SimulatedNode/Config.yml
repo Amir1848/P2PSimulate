@@ -1,5 +1,5 @@
-node_number : 2
-node_port : 8081
+node_number : 1
+node_port : 8080
 owned_files_dir : "Node1\\ownedFiles\\"
 new_files_dir : "Node1\\newFiles\\"
 owned_files :
@@ -8,8 +8,8 @@ owned_files :
         - "file3.txt"
 friend_nodes :
         -
-                node_name : 1
-                node_port : 8080
+                node_name : 2
+                node_port : 8081
         -
                 node_name : 3
                 node_port : 8082 

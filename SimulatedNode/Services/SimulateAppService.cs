@@ -51,6 +51,9 @@ namespace SimulatedNode.Services
                     var fileName = commandParts[1];
                     GetFile(fileName, GetNodePort(GetFileNodeNumber(fileName)));
                     break;
+                default:
+                    PrintHelp(commandParts[0]);
+                    break;
             }
             return CommandResult.Successful;
         }
@@ -71,9 +74,9 @@ namespace SimulatedNode.Services
                 var httpClient = new HttpClient();
                 foreach (var node in appConfig.FriendNodes.OrderBy(p => p.NodeName))
                 {
-                    var result = httpClient.GetAsync("http://localhost:"+ node.NodePort).Result;
+                    var result = httpClient.GetAsync("http://localhost:"+ node.NodePort + "/P2P/GetNodeAddress?nodeNumber=" + nodeNumber).Result;
                     var port = result.Content.ReadAsStringAsync().Result;
-                    if (string.IsNullOrWhiteSpace(port))
+                    if (!string.IsNullOrWhiteSpace(port))
                     {
                         nodeInfo.NodePort = port;
                         break;
@@ -90,7 +93,7 @@ namespace SimulatedNode.Services
 
         public static void PrintHelp(string note = null)
         {
-
+            Console.WriteLine(string.Format("Command {0} not found",note));
         }
 
         private static readonly HttpClient _httpClient = new HttpClient();
